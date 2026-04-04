@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { offlineRouter } from '../offline/OfflineRouter';
 
-const BACKEND_URL = '';  // Empty = use Vite proxy (proxied to localhost:8000)
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';  // Empty = use Vite proxy locally
 
 export function useRouting() {
   const [routes, setRoutes] = useState(null);

@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export function useDangerPins() {
   const [pins, setPins] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchPins = useCallback(async () => {
     try {
-      const res = await fetch('/api/danger-pins');
+      const res = await fetch(`${BACKEND_URL}/api/danger-pins`);
       if (res.ok) {
         const data = await res.json();
         setPins(data);
@@ -19,7 +21,7 @@ export function useDangerPins() {
   const createPin = useCallback(async (lat, lng, category, description = '') => {
     setLoading(true);
     try {
-      const res = await fetch('/api/danger-pins', {
+      const res = await fetch(`${BACKEND_URL}/api/danger-pins`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lat, lng, category, description }),

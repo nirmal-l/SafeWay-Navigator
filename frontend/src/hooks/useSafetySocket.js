@@ -2,7 +2,14 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 // WebSocket URL uses Vite's /ws proxy (configured in vite.config.js → server.proxy)
 // This routes ws://localhost:5173/ws/* → ws://localhost:8000/ws/*
-const WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/safety`;
+const rawBackend = import.meta.env.VITE_BACKEND_URL;
+let WS_URL;
+if (rawBackend && rawBackend.trim() !== '') {
+  const urlObj = new URL(rawBackend);
+  WS_URL = `${urlObj.protocol === 'https:' ? 'wss:' : 'ws:'}//${urlObj.host}/ws/safety`;
+} else {
+  WS_URL = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/safety`;
+}
 
 export function useSafetySocket(onDangerPinReceived) {
   const [isConnected, setIsConnected] = useState(false);
