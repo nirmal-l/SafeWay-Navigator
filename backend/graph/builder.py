@@ -19,12 +19,12 @@ import networkx as nx
 
 from graph.safety_scorer import calculate_edge_weight
 
-# Expanded Jaipur bounding box to include outskirts
+# Core Jaipur bounding box (tightened to fit in 512MB RAM on free tiers)
 JAIPUR_BBOX = {
-    "north": 27.1200,
-    "south": 26.6800,
-    "east": 76.0000,
-    "west": 75.6000,
+    "north": 27.0100,
+    "south": 26.8100,
+    "east": 75.8900,
+    "west": 75.6900,
 }
 
 # Approximate conversion at Jaipur's latitude (~26.9°N)
