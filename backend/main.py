@@ -18,9 +18,7 @@ async def lifespan(app: FastAPI):
     print("🚀 Initializing Fear-Free Night Navigator backend...")
     await init_db()
     print("✅ Database initialized (8 PostGIS tables)")
-    print("⏳ Pre-loading walk network...")
-    get_graph("walk")
-    print("✅ Jaipur road graph (Walk) ready and cached")
+    print("⏳ Graph network will be lazy-loaded on the first user request.")
     yield
     print("🔴 Shutting down...")
 
