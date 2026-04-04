@@ -1,0 +1,10 @@
+🚀 Initializing Fear-Free Night Navigator backend...
+✅ PostGIS tables initialized (8 tables for Jaipur safety engine)
+✅ Database initialized (8 PostGIS tables)
+⏳ Pre-loading walk network...
+📂 Loading cached Jaipur walk graph...
+✅ Cached walk graph loaded: 135124 nodes, 365548 edges
+✅ Jaipur road graph (Walk) ready and cached
+INFO:     127.0.0.1:60058 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60078 - "GET /api/danger-pins HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60079 - "GET /api/danger-pins HTTP/1.1" 200 OK

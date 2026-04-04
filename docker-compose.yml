@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: ffnn_postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ffnn_db
+      POSTGRES_USER: ffnn_user
+      POSTGRES_PASSWORD: ffnn_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ffnn_user -d ffnn_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+frontend/dist/
+frontend/.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Generated graph (large binary — regenerated on startup)
+backend/cache/
+frontend/public/offline_graph.json
+backend/data/*.pkl
+
+# Environment
+.env
+*.env.local
+
+# Database volumes
+pgdata/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
