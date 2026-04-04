@@ -25,9 +25,14 @@ class OfflineRouterEngine {
       let graphData = await localforage.getItem('jaipur_offline_graph_v1');
 
       if (!graphData) {
-        console.log('[OfflineRouter] Graph not in cache. Downloading (48MB)...');
+        console.log('[OfflineRouter] Graph not in cache. Attempting download...');
         const res = await fetch('/offline_graph.json');
-        if (!res.ok) throw new Error('Offline graph download failed');
+        // Vercel SPA routing returns index.html (text/html) for missing files
+        const ct = res.headers.get('content-type') || '';
+        if (!res.ok || ct.includes('text/html')) {
+          console.warn('[OfflineRouter] Offline graph not deployed. Online-only mode active.');
+          return false;
+        }
         graphData = await res.json();
         
         console.log('[OfflineRouter] Caching to IndexedDB via localforage...');

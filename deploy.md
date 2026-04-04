@@ -33,7 +33,7 @@ Render will natively run your Python graph engine and apply the PostGIS extensio
    - **Name:** `safeway-backend`
    - **Root Directory:** Type `backend` (very important!).
    - **Environment:** `Python 3`
-   - **Build Command:** `pip install -r requirements.txt && python data/seed.py`
+   - **Build Command:** `pip install -r requirements.txt && python data/seed.py && python data/prebuild_graph.py`
    - **Start Command:** `uvicorn main:app --host 0.0.0.0 --port 10000`
    - **Instance Type:** Free Tier.
 4. Scroll down and click on **Advanced**.
