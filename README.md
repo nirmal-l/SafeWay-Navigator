@@ -4,20 +4,20 @@
 
 SafeWay Navigator is a pedestrian routing engine built for Jaipur that prioritizes physical and psychological safety over simple speed. Instead of blindly routing users down the fastest dark alley, it guides them through well-lit, populated, and structurally safe streets.
 
-## Why We Built This
-Current navigation apps are fundamentally blind to context. Our goal was to create a tool that calculates routes specifically for vulnerable pedestrians walking alone at night. 
+## Why I Built This
+Current navigation apps are fundamentally blind to context. My goal was to create a tool that calculates routes specifically for vulnerable pedestrians walking alone at night. 
 
-To achieve this, we avoided just wrapping standard navigation APIs. Instead, the architectural core of this project is a custom pathfinding engine running over a geospatial network.
+To achieve this, I avoided just wrapping standard navigation APIs. Instead, the architectural core of this project is a custom pathfinding engine running over a geospatial network.
 
 ## Technical Implementation
 
 ### Core Logic & Data Structures
 The routing engine uses a custom **A* Pathfinding Algorithm** traversing a `NetworkX` graph. Edges are weighted by a proprietary **12-Factor Penalty System** rather than purely distance. The algorithm calculates dynamic penalties based on localized factors like street lighting, crime hotspots, CCTV density, and active businesses.
 
-To handle real-time spatial calculations efficiently, we utilize `scipy.spatial.cKDTree` for sub-millisecond nearest-neighbor lookups, rather than relying on heavy brute-force Haversine calculations.
+To handle real-time spatial calculations efficiently, I utilize `scipy.spatial.cKDTree` for sub-millisecond nearest-neighbor lookups, rather than relying on heavy brute-force Haversine calculations.
 
 ### Data Strategy
-To thoroughly test our logic, we built a comprehensive synthetic suite. Real Jaipur road topology is fetched live via `OSMnx`. Over this real-world grid, we seeded a **PostGIS** spatial database with high-quality proxy data (simulating specific crime zones, unlit streets, and safe havens) to reliably mimic a sprawling, unpredictable metropolitan landscape.
+To thoroughly test my logic, I built a comprehensive synthetic suite. Real Jaipur road topology is fetched live via `OSMnx`. Over this real-world grid, I seeded a **PostGIS** spatial database with high-quality proxy data (simulating specific crime zones, unlit streets, and safe havens) to reliably mimic a sprawling, unpredictable metropolitan landscape.
 
 ### Reliability
 The project utilizes a split-stack architecture (`Vite/React` + `FastAPI`). Heavy spatial graph generation is pickled and cached to ensure the routing engine adheres to strict production memory limits (512MB RAM). On the client, IndexDB caches map states to ensure the core navigation survives cellular drops.
@@ -28,9 +28,9 @@ The project utilizes a split-stack architecture (`Vite/React` + `FastAPI`). Heav
 - **SOS Modules:** Includes a simulated "Fake Phone Call" interface and 1-tap live WebSocket location sharing.
 
 ## Alternatives Considered & Future Scope
-While building the SafeWay Navigator, we considered several different ranking heuristics that we leaned away from due to data availability. However, moving forward, the **future of this project** involves adding a completely new dynamic metric: **Cellular Network Density**. 
+While building the SafeWay Navigator, I considered several different ranking heuristics that I leaned away from due to data availability. However, moving forward, the **future of this project** involves adding a completely new dynamic metric: **Cellular Network Density**. 
 
-Inspired by the offline crowd-status features of the application *"Where is my train"*, our next architectural goal is to passively interface with nearby network cell towers. By determining how many mobile devices are actively pinging a specific tower, a real-time **Cellular Network Density Heatmap** will be generated and directly fed into our graph algorithm. Paths intersecting with "hot" zones on this heatmap indicate active crowds and "eyes on the street" (even without CCTV or infrastructure), translating directly to a significantly higher dynamic safety score for night pedestrians.
+Inspired by the offline crowd-status features of the application *"Where is my train"*, my next architectural goal is to passively interface with nearby network cell towers. By determining how many mobile devices are actively pinging a specific tower, a real-time **Cellular Network Density Heatmap** will be generated and directly fed into the graph algorithm. Paths intersecting with "hot" zones on this heatmap indicate active crowds and "eyes on the street" (even without CCTV or infrastructure), translating directly to a significantly higher dynamic safety score for night pedestrians.
 
 ---
 
