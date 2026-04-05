@@ -52,7 +52,7 @@ def fetch_osm_data(query_tag: str):
         return []
 
 if __name__ == "__main__":
-    print("🌍 Fear-Free Night Navigator: Live OSM Data Integration")
+    print("🌍 SafeWay Navigator: Live OSM Data Integration")
     print("-" * 50)
     
     # Example 1: Fetch Police Stations (Safe Havens)

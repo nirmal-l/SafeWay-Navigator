@@ -196,7 +196,7 @@ export default function SearchPanel({ onRouteRequest, loading, routes, activeRou
         <h1 style={{
           fontSize: '20px', fontWeight: '700', color: 'var(--text-primary)',
           letterSpacing: '-0.02em', margin: 0,
-        }}>Night Navigator</h1>
+        }}>SafeWay Navigator</h1>
         <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>
           Safe Routing for Jaipur
         </div>

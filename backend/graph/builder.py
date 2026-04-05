@@ -7,6 +7,7 @@ OPTIMIZED: Uses scipy cKDTree for O(E × log(D)) spatial queries instead of
            brute-force O(E × D) haversine distance calculations.
 """
 import os
+import logging
 import pickle
 import math
 from datetime import datetime
@@ -18,6 +19,8 @@ import osmnx as ox
 import networkx as nx
 
 from graph.safety_scorer import calculate_edge_weight
+
+logger = logging.getLogger("safeway")
 
 # Core Jaipur bounding box (tightened to fit in 512MB RAM on free tiers)
 JAIPUR_BBOX = {
@@ -98,8 +101,8 @@ def build_graph_from_osm(vehicle_type: str = "walk") -> nx.MultiDiGraph:
     Download Jaipur road network from OpenStreetMap via OSMnx.
     Enriches every edge with road_type and zero-initialized safety attributes.
     """
-    print(f"📡 Downloading Jaipur {vehicle_type} network from OpenStreetMap...")
-    print("   (This may take 60-90 seconds on first run)")
+    logger.info(f"📡 Downloading Jaipur {vehicle_type} network from OpenStreetMap...")
+    logger.info("   (This may take 60-90 seconds on first run)")
 
     G = ox.graph_from_bbox(
         bbox=(
@@ -131,7 +134,7 @@ def build_graph_from_osm(vehicle_type: str = "walk") -> nx.MultiDiGraph:
         G[u][v][k]["security_count"] = 0
         G[u][v][k]["business_count"] = 0
 
-    print(f"✅ Jaipur graph built: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+    logger.info(f"✅ Jaipur graph built: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
     return G
 
 
@@ -140,13 +143,13 @@ def save_graph(G: nx.MultiDiGraph, vehicle_type: str = "walk"):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "wb") as f:
         pickle.dump(G, f)
-    print(f"💾 Graph cached to {path}")
+    logger.info(f"💾 Graph cached to {path}")
 
 
 def load_graph(vehicle_type: str = "walk") -> Optional[nx.MultiDiGraph]:
     path = _get_cache_path(vehicle_type)
     if os.path.exists(path):
-        print(f"📂 Loading cached Jaipur {vehicle_type} graph...")
+        logger.info(f"📂 Loading cached Jaipur {vehicle_type} graph...")
         with open(path, "rb") as f:
             G = pickle.load(f)
         
@@ -155,7 +158,7 @@ def load_graph(vehicle_type: str = "walk") -> Optional[nx.MultiDiGraph]:
         if vehicle_type in ["bike", "drive"]:
             G = G.to_undirected()
             
-        print(f"✅ Cached {vehicle_type} graph loaded: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+        logger.info(f"✅ Cached {vehicle_type} graph loaded: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
         return G
     return None
 
@@ -294,6 +297,6 @@ def apply_safety_weights(
         G[u][v][k]["business_count"] = len(nearby_biz)
 
     elapsed = time.perf_counter() - t0
-    print(f"⚡ Safety weights applied to {edges_processed} edges in {elapsed:.2f}s (KD-tree optimized)")
+    logger.info(f"⚡ Safety weights applied to {edges_processed} edges in {elapsed:.2f}s (KD-tree optimized)")
 
     return G

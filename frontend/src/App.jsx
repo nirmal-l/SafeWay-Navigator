@@ -7,6 +7,7 @@ import DangerPinModal from './components/DangerPinModal';
 import GuardianLink from './components/GuardianLink';
 import DashboardStats from './components/LiveStats';
 import LoadingScreen from './components/LoadingScreen';
+import ReliefCompanion from './components/ReliefCompanion';
 import { offlineRouter } from './offline/OfflineRouter';
 import { useRouting } from './hooks/useRouting';
 import { useGeolocation } from './hooks/useGeolocation';
@@ -25,6 +26,7 @@ export default function App() {
 
   const [dangerPinTarget, setDangerPinTarget] = useState(null);
   const [showGuardian, setShowGuardian] = useState(false);
+  const [showRelief, setShowRelief] = useState(false);
   const [activeRouteIndex, setActiveRouteIndex] = useState(0);
   const [isNavigating, setIsNavigating] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
@@ -37,7 +39,7 @@ export default function App() {
   }, [userLocation, isNavigating, activeRouteIndex, routes, sendLocation]);
   
   const [appInitializing, setAppInitializing] = useState(true);
-  const [initMsg, setInitMsg] = useState("Booting Night Navigator...");
+  const [initMsg, setInitMsg] = useState("Booting SafeWay Navigator...");
 
   useEffect(() => {
     async function init() {
@@ -135,6 +137,11 @@ export default function App() {
         />
       )}
 
+      {/* Relief Companion Modal */}
+      {showRelief && (
+        <ReliefCompanion onClose={() => setShowRelief(false)} />
+      )}
+
       {/* Navigation Controls */}
       {isNavigating && (
         <>
@@ -153,6 +160,10 @@ export default function App() {
               else alert("Location unavailable");
             }}>Report Hazard</button>
 
+          <button className="nav-relief-btn animate-scale-in" onClick={() => setShowRelief(true)}>
+            Relief
+          </button>
+
           <button className="nav-audio-btn animate-scale-in"
             onClick={() => setAudioEnabled(!audioEnabled)}
             style={{
@@ -168,9 +179,9 @@ export default function App() {
 
       {/* Brand Badge */}
       <div className="brand-badge" style={{ 
-        top: isNavigating ? '20px' : 'auto', 
+        top: isNavigating ? '24px' : 'auto', 
         bottom: isNavigating ? 'auto' : '40px',
-        right: isNavigating ? '20px' : '104px'
+        right: isNavigating ? '64px' : '104px'
       }}>
         <span className="dot" />
         Jaipur

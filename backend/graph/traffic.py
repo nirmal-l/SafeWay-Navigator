@@ -1,7 +1,10 @@
 import math
 import random
 import os
+import logging
 import httpx
+
+logger = logging.getLogger("safeway")
 
 MAPBOX_TOKEN = os.environ.get("MAPBOX_TRAFFIC_TOKEN", "") or os.environ.get("VITE_MAPBOX_TOKEN", "")
 
@@ -70,7 +73,7 @@ async def get_live_traffic_data(coordinates: list, vehicle_type: str, total_dist
                         "coordinates": live_coords
                     }
         except Exception as e:
-            print(f"Mapbox API fallback: {str(e)}")
+            logger.warning(f"Mapbox API fallback: {str(e)}")
 
     # 3. Simulation Fallback (if API fails or no token)
     # Simulate patches of traffic for drive

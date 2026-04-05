@@ -1,5 +1,5 @@
 """
-API Routes — All HTTP endpoints for the Fear-Free Night Navigator (Jaipur).
+API Routes — All HTTP endpoints for the SafeWay Navigator (Jaipur).
 Loads all 8 data layers and passes them to the safety-weighted graph engine.
 
 OPTIMIZED: 
@@ -8,6 +8,7 @@ OPTIMIZED:
   - Danger pins always loaded fresh (real-time user data)
 """
 import secrets
+import logging
 import time as _time
 from datetime import datetime
 from typing import List, Optional
@@ -22,7 +23,14 @@ from database.connection import get_pool
 
 import asyncio
 
+logger = logging.getLogger("safeway")
 router = APIRouter()
+
+# ── Whitelist of valid PostGIS table names (prevent SQL injection) ─────────────
+VALID_TABLES = {
+    "streetlights", "crime_records", "businesses", "danger_pins",
+    "safe_havens", "cctv_zones", "transit_hubs", "security_points",
+}
 
 # ── In-memory cache for safety data layers ────────────────────────────────────
 _data_cache = {}
@@ -93,6 +101,8 @@ async def health():
 
 async def _load_spatial_data(table: str, extra_cols: str = "") -> list:
     """Load lat/lng data from a PostGIS table."""
+    if table not in VALID_TABLES:
+        raise ValueError(f"Invalid table name: {table}")
     pool = await get_pool()
     extra = f", {extra_cols}" if extra_cols else ""
     async with pool.acquire() as conn:
@@ -146,7 +156,7 @@ async def get_safe_route(request: RouteRequest):
         )
 
         t_data = _time.perf_counter()
-        print(f"📊 Data loaded in {t_data - t_start:.3f}s (8 layers, {sum(len(x) for x in [streetlights, crimes, businesses, danger_pins_data, safe_havens, cctv_zones, transit_hubs, security_points])} total points)")
+        logger.info(f"📊 Data loaded in {t_data - t_start:.3f}s (8 layers, {sum(len(x) for x in [streetlights, crimes, businesses, danger_pins_data, safe_havens, cctv_zones, transit_hubs, security_points])} total points)")
 
         G = get_graph(request.vehicle_type)
 
@@ -167,12 +177,12 @@ async def get_safe_route(request: RouteRequest):
         )
 
         t_weights = _time.perf_counter()
-        print(f"🧮 Safety weights applied in {t_weights - t_data:.3f}s")
+        logger.info(f"🧮 Safety weights applied in {t_weights - t_data:.3f}s")
 
         results = calculate_safe_routes(G, start_lat, start_lng, end_lat, end_lng, k_routes=3, vehicle_type=request.vehicle_type)
 
         t_routes = _time.perf_counter()
-        print(f"🗺️ A* pathfinding done in {t_routes - t_weights:.3f}s")
+        logger.info(f"🗺️ A* pathfinding done in {t_routes - t_weights:.3f}s")
         
         # Fetch live commute times and traffic patches asynchronously for all K routes
         traffic_tasks = [
@@ -186,7 +196,7 @@ async def get_safe_route(request: RouteRequest):
             r["congestion"] = traffic_data["congestion"]
             r["coordinates"] = traffic_data["coordinates"] # Mapbox snaps to roads, making lines smoother!
 
-        print(f"✅ Total route calculation (with live traffic): {_time.perf_counter() - t_start:.3f}s")
+        logger.info(f"✅ Total route calculation (with live traffic): {_time.perf_counter() - t_start:.3f}s")
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -316,5 +326,7 @@ async def get_data_overview():
     result = {}
     async with pool.acquire() as conn:
         for t in tables:
+            if t not in VALID_TABLES:
+                continue
             result[t] = await conn.fetchval(f"SELECT COUNT(*) FROM {t}")
     return result

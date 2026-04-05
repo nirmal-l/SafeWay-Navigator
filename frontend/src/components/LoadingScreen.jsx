@@ -16,7 +16,7 @@ export default function LoadingScreen({ statusMessage }) {
       </div>
       
       <h1 style={{ fontSize: '24px', fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '8px' }}>
-        Night Navigator
+        SafeWay Navigator
       </h1>
       
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)' }}>

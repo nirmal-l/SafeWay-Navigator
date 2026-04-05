@@ -4,6 +4,16 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = (import.meta.env.VITE_MAPBOX_TOKEN || '').trim().replace(/^['"]|['"]$/g, '');
 
+// Build WebSocket URL pointing to the backend (Render), not the frontend (Vercel)
+const rawBackend = import.meta.env.VITE_BACKEND_URL;
+function buildGuardianWsUrl(token) {
+  if (rawBackend && rawBackend.trim() !== '') {
+    const urlObj = new URL(rawBackend);
+    return `${urlObj.protocol === 'https:' ? 'wss:' : 'ws:'}//${urlObj.host}/ws/guardian/${token}`;
+  }
+  return `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/guardian/${token}`;
+}
+
 export default function GuardianObserver({ token }) {
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -40,9 +50,8 @@ export default function GuardianObserver({ token }) {
         .addTo(map.current);
     }
 
-    // 2. Connect WebSocket via Vite proxy (/ws path proxied to port 8000)
-    const wsProto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsProto}//${window.location.host}/ws/guardian/${token}`;
+    // 2. Connect WebSocket to the backend (Render), not the frontend (Vercel)
+    const wsUrl = buildGuardianWsUrl(token);
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {

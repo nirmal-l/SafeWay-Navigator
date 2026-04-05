@@ -1,5 +1,5 @@
 /* ============================================================
-   Night Navigator — Professional Minimalist Design
+   SafeWay Navigator — Professional Minimalist Design
    Clean, high-contrast, robust UI matching industry standards.
    ============================================================ */
 
@@ -366,20 +366,24 @@ body {
    ══════════════════════════════════════════════════════════════ */
 .brand-badge {
   position: absolute; top: 20px; right: 20px;
-  background: var(--bg-1);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  padding: 6px 12px;
-  font-size: 12px; color: var(--text-secondary);
+  background: rgba(18, 18, 24, 0.75);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 13px; color: var(--text-primary);
   z-index: 50;
   display: flex; align-items: center; gap: 8px;
   font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
 }
 
 .brand-badge .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--safe);
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #00E676;
   display: inline-block;
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.8);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -528,3 +532,130 @@ body {
   70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
   100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RELIEF COMPANION (VIRTUAL GUARDIAN)
+   ══════════════════════════════════════════════════════════════ */
+.nav-relief-btn {
+  position: absolute; top: 140px; right: 154px;
+  z-index: 60; padding: 10px 16px; font-size: 13px; font-weight: 500;
+  border-radius: var(--radius-sm);
+  color: var(--primary); border: 1px solid var(--primary);
+  background: var(--bg-1);
+  cursor: pointer; transition: all var(--transition-fast);
+}
+
+.nav-relief-btn:hover {
+  background: var(--primary-surface);
+}
+
+.relief-companion-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5, 10, 18, 0.95);
+  z-index: 999;
+  display: flex; flex-direction: column;
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+
+.relief-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 32px 24px; border-bottom: 1px solid var(--border-light);
+}
+
+.relief-header h2 { font-size: 20px; font-weight: 600; color: var(--primary); }
+
+.relief-close-btn {
+  background: transparent; border: none; font-size: 32px; 
+  color: var(--text-muted); cursor: pointer; transition: color var(--transition-fast);
+  line-height: 1; padding: 0; margin: 0;
+}
+
+.relief-close-btn:hover { color: var(--text-primary); }
+
+.relief-content {
+  flex: 1; display: flex; flex-direction: column; 
+  align-items: center; justify-content: space-between; padding: 24px; padding-bottom: 40px;
+  overflow: hidden;
+}
+
+.guardian-orb-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.guardian-orb {
+  width: 140px; height: 140px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(138,43,226, 0.9), rgba(75,0,130, 0.9));
+  box-shadow: 0 0 60px rgba(138,43,226, 0.4), inset 0 0 20px rgba(255,255,255,0.2);
+  margin-bottom: 30px; cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255,255,255,0.1);
+  flex-shrink: 0;
+}
+
+.guardian-orb.speaking {
+  animation: orb-breathe 2s ease-in-out infinite alternate;
+  box-shadow: 0 0 100px rgba(138,43,226, 0.8), inset 0 0 40px rgba(255,255,255,0.4);
+  background: radial-gradient(circle at 40% 40%, rgba(186,85,211, 1), rgba(138,43,226, 1));
+}
+
+.guardian-orb.listening {
+  animation: orb-listen 1.5s ease-in-out infinite alternate;
+  border: 4px solid #00E676;
+  box-shadow: 0 0 60px rgba(0,230,118, 0.5);
+  background: radial-gradient(circle at 30% 30%, #69F0AE, #00C853);
+}
+
+.guardian-orb.thinking {
+  animation: orb-spin 2s linear infinite;
+  border-top: 4px solid rgba(255,255,255,0.8);
+  border-right: 4px solid rgba(255,255,255,0.2);
+  border-bottom: 4px solid rgba(255,255,255,0.2);
+  border-left: 4px solid rgba(255,255,255,0.2);
+}
+
+.guardian-orb.paused {
+  opacity: 0.3;
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes orb-breathe {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes orb-listen {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.05); }
+}
+
+@keyframes orb-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.guardian-status {
+  font-size: 16px; color: var(--text-secondary); margin-bottom: 24px;
+  text-align: center; font-weight: 500;
+}
+
+.guardian-transcript {
+  font-size: 16px; color: var(--text-primary); text-align: left;
+  width: 100%; max-width: 600px; line-height: 1.6; font-weight: 400; 
+  background: rgba(255, 255, 255, 0.05); padding: 20px 24px; border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1); margin-top: 10px;
+  max-height: 40vh; overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+
+/* Custom scrollbar for beautiful transcript scrolling */
+.guardian-transcript::-webkit-scrollbar { width: 6px; }
+.guardian-transcript::-webkit-scrollbar-track { background: transparent; }
+.guardian-transcript::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 6px; }
+.guardian-transcript::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }

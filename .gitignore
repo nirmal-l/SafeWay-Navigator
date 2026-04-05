@@ -26,6 +26,11 @@ backend/data/*.pkl
 # Database volumes
 pgdata/
 
+# Dev logs
+*.log
+backend/backend_log.txt
+frontend/dev_log*.txt
+
 # OS
 .DS_Store
 Thumbs.db

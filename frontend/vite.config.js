@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Night Navigator',
-        short_name: 'NightNav',
-        description: 'Offline-capable Safe Routing for Jaipur',
+        name: 'SafeWay Navigator',
+        short_name: 'SafeWay',
+        description: 'SafeWay Navigator — AI-powered safe routing for Jaipur',
         theme_color: '#000000',
         background_color: '#000000',
         icons: [

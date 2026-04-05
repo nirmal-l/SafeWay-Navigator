@@ -374,7 +374,7 @@ async def seed_security_points(conn):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 async def main():
-    print("🌱 Fear-Free Night Navigator — Jaipur Data Seeder (v2: 12-Factor)")
+    print("🌱 SafeWay Navigator — Jaipur Data Seeder (v2: 12-Factor)")
     print("=" * 60)
     conn = await asyncpg.connect(DATABASE_URL)
     try:

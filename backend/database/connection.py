@@ -3,10 +3,13 @@ Database connection and initialization using asyncpg.
 Supports PostGIS spatial tables for the Jaipur safety engine.
 """
 import os
+import logging
+import asyncio
 import asyncpg
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger("safeway")
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://ffnn_user:ffnn_password@localhost:5433/ffnn_db")
 _pool = None
@@ -15,8 +18,27 @@ _pool = None
 async def get_pool() -> asyncpg.Pool:
     global _pool
     if _pool is None:
-        _pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10)
+        # Retry logic for cold-start DB connections (Render free tier wakes up slowly)
+        for attempt in range(3):
+            try:
+                _pool = await asyncpg.create_pool(DATABASE_URL, min_size=2, max_size=10)
+                break
+            except Exception as e:
+                if attempt < 2:
+                    logger.warning(f"DB connection attempt {attempt + 1} failed, retrying in 2s: {e}")
+                    await asyncio.sleep(2)
+                else:
+                    raise
     return _pool
+
+
+async def close_pool():
+    """Gracefully close the connection pool on shutdown."""
+    global _pool
+    if _pool is not None:
+        await _pool.close()
+        _pool = None
+        logger.info("Database connection pool closed.")
 
 
 async def init_db():
@@ -119,4 +141,4 @@ async def init_db():
         """)
         await conn.execute("CREATE INDEX IF NOT EXISTS idx_security_geom ON security_points USING GIST(geom);")
 
-    print("✅ PostGIS tables initialized (8 tables for Jaipur safety engine)")
+    logger.info("✅ PostGIS tables initialized (8 tables for Jaipur safety engine)")

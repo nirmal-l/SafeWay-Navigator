@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+// NOTE: "Nearby Users" & "Conditions" are simulated for hackathon demo purposes.
+// In production, these would pull from real WebSocket connection counts & weather APIs.
 export default function DashboardStats() {
   const [time, setTime] = useState(new Date());
   const [users, setUsers] = useState(342);
